@@ -4,6 +4,7 @@ import Register from "./auth/Register";
 import Dashboard from "./pages/Dashboard";
 import Jobs from "./pages/Jobs";
 import UploadResume from "./pages/UploadResume";
+import './App.css'
 
 function App() {
   return (

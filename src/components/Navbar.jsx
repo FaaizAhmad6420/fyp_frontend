@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../utils/auth";
 import api from "../api/axios";
@@ -7,6 +7,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   // Fetch user profile
   const fetchUser = async () => {
@@ -21,6 +22,23 @@ const Navbar = () => {
   useEffect(() => {
     fetchUser();
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const handleLogout = () => {
     logout();
@@ -51,7 +69,7 @@ const Navbar = () => {
 
       {/* Right side - Username dropdown */}
       {user && (
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-2"

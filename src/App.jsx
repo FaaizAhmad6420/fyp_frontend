@@ -4,6 +4,7 @@ import Register from "./auth/Register";
 import Dashboard from "./pages/Dashboard";
 import Jobs from "./pages/Jobs";
 import UploadResume from "./pages/UploadResume";
+import ProtectedRoute from "./components/ProtectedRoute";
 import './App.css'
 
 function App() {
@@ -12,9 +13,12 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/jobs" element={<Jobs />} />
-        <Route path="/upload-resume" element={<UploadResume />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/jobs" element={<Jobs />} />
+          <Route path="/upload-resume" element={<UploadResume />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

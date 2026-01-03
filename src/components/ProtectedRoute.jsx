@@ -1,8 +1,13 @@
-import { Navigate } from "react-router-dom";
-import { getToken } from "../utils/auth";
+import { Navigate, Outlet } from "react-router-dom";
+import { isAuthenticated } from "../utils/auth";
 
-function ProtectedRoute({ children }) {
-  return getToken() ? children : <Navigate to="/login" />;
-}
+const ProtectedRoute = () => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Outlet renders the nested route component
+  return <Outlet />;
+};
 
 export default ProtectedRoute;

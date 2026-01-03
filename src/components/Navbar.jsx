@@ -26,17 +26,17 @@ const Navbar = () => {
         </Link>
 
         <Link
+          to="/resumes"
+          className="hover:text-blue-400 transition"
+        >
+          Resumes
+        </Link>
+
+        <Link
           to="/jobs"
           className="hover:text-blue-400 transition"
         >
           Jobs
-        </Link>
-
-        <Link
-          to="/upload"
-          className="hover:text-blue-400 transition"
-        >
-          Upload Resume
         </Link>
       </div>
 

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import api from "../api/axios";
 import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom";
 
 const UploadResume = () => {
+  const navigation = useNavigate();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -28,6 +30,7 @@ const UploadResume = () => {
 
       setMessage("✅ Resume uploaded successfully!");
       setFile(null);
+      navigation("/resumes");
     } catch (error) {
       setMessage("❌ Failed to upload resume.");
     } finally {

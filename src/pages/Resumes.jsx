@@ -79,12 +79,12 @@ const Resumes = () => {
                   </span>
                 ))}
               </div>
-              <details className="mt-2 text-sm text-gray-700">
+              {/* <details className="mt-2 text-sm text-gray-700">
                 <summary className="cursor-pointer font-medium">
                   View Extracted Text
                 </summary>
                 <pre className="whitespace-pre-wrap mt-1">{resume.extracted_text}</pre>
-              </details>
+              </details> */}
             </div>
           ))}
         </div>

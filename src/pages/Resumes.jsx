@@ -79,12 +79,82 @@ const Resumes = () => {
                   </span>
                 ))}
               </div>
-              {/* <details className="mt-2 text-sm text-gray-700">
-                <summary className="cursor-pointer font-medium">
-                  View Extracted Text
-                </summary>
-                <pre className="whitespace-pre-wrap mt-1">{resume.extracted_text}</pre>
-              </details> */}
+              {resume.parsed_data ? (
+                <details className="mt-3 text-sm text-gray-700">
+                  <summary className="cursor-pointer font-semibold">
+                    View Parsed Resume Data
+                  </summary>
+
+                  <div className="mt-2 space-y-3">
+
+                    {/* Basic Info */}
+                    <div>
+                      <p className="font-medium">Contact</p>
+                      <p>Name: {resume.parsed_data.name || "N/A"}</p>
+                      <p>Email: {resume.parsed_data.email || "N/A"}</p>
+                      <p>Phone: {resume.parsed_data.phone || "N/A"}</p>
+                    </div>
+
+                    {/* Skills */}
+                    {resume.parsed_data.skills?.length > 0 && (
+                      <div>
+                        <p className="font-medium">Skills</p>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {resume.parsed_data.skills.map((s, i) => (
+                            <span
+                              key={i}
+                              className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
+                            >
+                              {s}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Education */}
+                    {resume.parsed_data.education?.length > 0 && (
+                      <div>
+                        <p className="font-medium">Education</p>
+                        <ul className="list-disc list-inside">
+                          {resume.parsed_data.education.map((edu, i) => (
+                            <li key={i}>
+                              {edu.name}
+                              {edu.date_start && ` (${edu.date_start}`}
+                              {edu.date_end && ` - ${edu.date_end})`}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Experience */}
+                    {resume.parsed_data.experience?.length > 0 && (
+                      <div>
+                        <p className="font-medium">Experience</p>
+                        <ul className="list-disc list-inside">
+                          {resume.parsed_data.experience.map((exp, i) => (
+                            <li key={i}>
+                              {exp.title} {exp.organization && `- ${exp.organization}`}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                  </div>
+                </details>
+              ) : resume.extracted_text ? (
+                <details className="mt-3 text-sm text-gray-700">
+                  <summary className="cursor-pointer font-semibold">
+                    View Extracted Text
+                  </summary>
+                  <pre className="whitespace-pre-wrap mt-2 bg-gray-100 p-2 rounded">
+                    {resume.extracted_text}
+                  </pre>
+                </details>
+              ) : null}
+
             </div>
           ))}
         </div>

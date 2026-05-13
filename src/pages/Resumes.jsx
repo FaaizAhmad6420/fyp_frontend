@@ -236,6 +236,20 @@ const Resumes = () => {
                             </ul>
                           </div>
                         )}
+
+                        {/* AI Cover Letter */}
+                        {resume.cover_letter && (
+                          <div className="mt-6 border-t pt-4">
+
+                            <h2 className="text-xl font-bold mb-4 text-purple-700">
+                              AI Generated Cover Letter
+                            </h2>
+
+                            <div className="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap text-gray-700 text-sm leading-relaxed">
+                              {resume.cover_letter}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 

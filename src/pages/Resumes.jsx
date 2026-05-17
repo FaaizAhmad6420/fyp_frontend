@@ -250,6 +250,21 @@ const Resumes = () => {
                             </div>
                           </div>
                         )}
+
+                        {/* Tailored Resume */}
+                        {resume.tailored_resume && (
+                          <div className="mt-6 border-t pt-4">
+
+                            <h2 className="text-xl font-bold mb-4 text-green-700">
+                              AI Tailored Resume
+                            </h2>
+
+                            <div className="bg-green-50 p-4 rounded-lg whitespace-pre-wrap text-gray-700 text-sm leading-relaxed">
+                              {resume.tailored_resume}
+                            </div>
+
+                          </div>
+                        )}
                       </div>
                     )}
 

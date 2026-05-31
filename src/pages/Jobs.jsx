@@ -12,7 +12,6 @@ const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     fetchJobs();
@@ -52,48 +51,6 @@ const Jobs = () => {
     }
   };
 
-  const generateTailoredResume = async (jobId) => {
-
-    try {
-
-      setGenerating(true);
-
-      // Fetch latest resume
-      const resumeResponse = await api.get("/resumes/upload/");
-
-      const resumes = resumeResponse.data;
-
-      if (resumes.length === 0) {
-        alert("Upload resume first");
-        return;
-      }
-
-      const latestResume = resumes[resumes.length - 1];
-
-      await api.post(
-        "/resumes/generate-tailored-resume/",
-        {
-          resume_id: latestResume.id,
-          job_id: jobId,
-        }
-      );
-
-      alert("Tailored Resume Generated");
-
-      navigate("/resumes");
-
-    } catch (err) {
-
-      console.error(err);
-
-      alert("Generation failed");
-
-    } finally {
-
-      setGenerating(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-100">
 
@@ -127,12 +84,6 @@ const Jobs = () => {
           </p>
         )}
 
-        {generating && (
-          <div className="mb-4 text-purple-700 font-semibold">
-            Generating tailored resume using AI...
-          </div>
-        )}
-
         {!loading && jobs.length === 0 && (
           <p className="text-gray-600">
             No jobs found.
@@ -145,7 +96,6 @@ const Jobs = () => {
             <JobCard
               key={job.job_id}
               job={job}
-              onGenerate={generateTailoredResume}
             />
           ))}
 

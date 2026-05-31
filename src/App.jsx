@@ -3,6 +3,7 @@ import Login from "./auth/Login";
 import Register from "./auth/Register";
 import Dashboard from "./pages/Dashboard";
 import Jobs from "./pages/Jobs";
+import JobDetail from "./pages/JobDetail";
 import Resumes from "./pages/Resumes";
 import UploadResume from "./pages/UploadResume";
 import Applications from "./pages/Applications";
@@ -19,6 +20,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/jobs/:id" element={<JobDetail />} />
           <Route path="/resumes" element={<Resumes />} />
           <Route path="/upload-resume" element={<UploadResume />} />
           <Route path="/applications" element={<Applications />} />

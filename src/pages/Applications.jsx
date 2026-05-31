@@ -138,6 +138,7 @@ const Applications = () => {
                     View Tailored Resume
                   </summary>
 
+                  
                   <div className="mt-2 whitespace-pre-wrap text-sm text-gray-700">
                     {app.tailored_resume}
                   </div>

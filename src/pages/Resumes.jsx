@@ -68,24 +68,13 @@ const Resumes = () => {
               <p className="text-sm text-gray-500">
                 Uploaded: {new Date(resume.created_at).toLocaleString()}
               </p>
-              <p className="text-sm font-medium">Skills:</p>
-              <div className="flex flex-wrap gap-2">
-                {resume.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
               {resume.parsed_data ? (
                 <details className="mt-3 text-sm text-gray-700">
                   <summary className="cursor-pointer font-semibold">
                     View Parsed Resume Data
                   </summary>
 
-                  <div className="mt-2 space-y-3">
+                  <div className="mt-2 space-y-3 border-b border-gray-300 p-3">
 
                     {/* Basic Info */}
                     <div>
@@ -142,139 +131,6 @@ const Resumes = () => {
                       </div>
                     )}
 
-                    {/* AI Analysis */}
-                    {resume.ai_analysis && !resume.ai_analysis.error && (
-                      <div className="mt-6 border-t pt-4">
-
-                        <h2 className="text-xl font-bold mb-4 text-blue-700">
-                          AI Resume Analysis
-                        </h2>
-
-                        {/* ATS Score */}
-                        <div className="mb-4">
-                          <p className="font-semibold mb-1">
-                            ATS Score
-                          </p>
-
-                          <div className="w-full bg-gray-200 rounded-full h-4">
-                            <div
-                              className="bg-green-500 h-4 rounded-full"
-                              style={{
-                                width: `${resume.ats_score}%`,
-                              }}
-                            ></div>
-                          </div>
-
-                          <p className="mt-1 text-sm text-gray-700">
-                            {resume.ats_score}%
-                          </p>
-                        </div>
-
-                        {/* Career Domain */}
-                        {resume.ai_analysis.career_domain && (
-                          <div className="mb-4">
-                            <p className="font-semibold">
-                              Career Domain
-                            </p>
-
-                            <p className="text-gray-700">
-                              {resume.ai_analysis.career_domain}
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Missing Skills */}
-                        {resume.ai_analysis.missing_skills?.length > 0 && (
-                          <div className="mb-4">
-                            <p className="font-semibold mb-2">
-                              Missing Skills
-                            </p>
-
-                            <div className="flex flex-wrap gap-2">
-                              {resume.ai_analysis.missing_skills.map((skill, index) => (
-                                <span
-                                  key={index}
-                                  className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs"
-                                >
-                                  {skill}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Strengths */}
-                        {resume.ai_analysis.strengths?.length > 0 && (
-                          <div className="mb-4">
-                            <p className="font-semibold mb-2">
-                              Strengths
-                            </p>
-
-                            <ul className="list-disc list-inside text-gray-700 space-y-1">
-                              {resume.ai_analysis.strengths.map((item, index) => (
-                                <li key={index}>
-                                  {item}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                        {/* Suggestions */}
-                        {resume.ai_analysis.suggestions?.length > 0 && (
-                          <div>
-                            <p className="font-semibold mb-2">
-                              Suggestions
-                            </p>
-
-                            <ul className="list-disc list-inside text-gray-700 space-y-1">
-                              {resume.ai_analysis.suggestions.map((item, index) => (
-                                <li key={index}>
-                                  {item}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                        {/* AI Cover Letter */}
-                        {resume.cover_letter && (
-                          <div className="mt-6 border-t pt-4">
-
-                            <h2 className="text-xl font-bold mb-4 text-purple-700">
-                              AI Generated Cover Letter
-                            </h2>
-
-                            <div className="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap text-gray-700 text-sm leading-relaxed">
-                              {resume.cover_letter}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Tailored Resume */}
-                        {resume.tailored_resume && (
-                          <div className="mt-6 border-t pt-4">
-
-                            <h2 className="text-xl font-bold mb-4 text-green-700">
-                              AI Tailored Resume
-                            </h2>
-
-                            <div className="bg-green-50 p-4 rounded-lg whitespace-pre-wrap text-gray-700 text-sm leading-relaxed">
-                              {resume.tailored_resume}
-                            </div>
-
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* AI Error */}
-                    {resume.ai_analysis?.error && (
-                      <div className="mt-4 bg-red-100 text-red-700 p-3 rounded">
-                        AI Analysis Failed: {resume.ai_analysis.error}
-                      </div>
-                    )}
-
                   </div>
                 </details>
               ) : resume.extracted_text ? (
@@ -288,6 +144,109 @@ const Resumes = () => {
                 </details>
               ) : null}
 
+              {/* AI Analysis */}
+              {resume.ai_analysis && !resume.ai_analysis.error && (
+                <div className="pt-4">
+
+                  <h2 className="text-xl font-bold mb-4 text-blue-700">
+                    AI Resume Analysis
+                  </h2>
+
+                  {/* ATS Score */}
+                  <div className="mb-4">
+                    <p className="font-semibold mb-1">
+                      ATS Score
+                    </p>
+
+                    <div className="w-full bg-gray-200 rounded-full h-4">
+                      <div
+                        className="bg-green-500 h-4 rounded-full"
+                        style={{
+                          width: `${resume.ats_score}%`,
+                        }}
+                      ></div>
+                    </div>
+
+                    <p className="mt-1 text-sm text-gray-700">
+                      {resume.ats_score}%
+                    </p>
+                  </div>
+
+                  {/* Career Domain */}
+                  {resume.ai_analysis.career_domain && (
+                    <div className="mb-4">
+                      <p className="font-semibold">
+                        Career Domain
+                      </p>
+
+                      <p className="text-gray-700">
+                        {resume.ai_analysis.career_domain}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Missing Skills */}
+                  {resume.ai_analysis.missing_skills?.length > 0 && (
+                    <div className="mb-4">
+                      <p className="font-semibold mb-2">
+                        Missing Skills
+                      </p>
+
+                      <div className="flex flex-wrap gap-2">
+                        {resume.ai_analysis.missing_skills.map((skill, index) => (
+                          <span
+                            key={index}
+                            className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Strengths */}
+                  {resume.ai_analysis.strengths?.length > 0 && (
+                    <div className="mb-4">
+                      <p className="font-semibold mb-2">
+                        Strengths
+                      </p>
+
+                      <ul className="list-disc list-inside text-gray-700 space-y-1">
+                        {resume.ai_analysis.strengths.map((item, index) => (
+                          <li key={index}>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Suggestions */}
+                  {resume.ai_analysis.suggestions?.length > 0 && (
+                    <div>
+                      <p className="font-semibold mb-2">
+                        Suggestions
+                      </p>
+
+                      <ul className="list-disc list-inside text-gray-700 space-y-1">
+                        {resume.ai_analysis.suggestions.map((item, index) => (
+                          <li key={index}>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* AI Error */}
+              {resume.ai_analysis?.error && (
+                <div className="mt-4 bg-red-100 text-red-700 p-3 rounded">
+                  AI Analysis Failed: {resume.ai_analysis.error}
+                </div>
+              )}
             </div>
           ))}
         </div>

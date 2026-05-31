@@ -47,6 +47,10 @@ const Navbar = () => {
         <Link to="/jobs" className="hover:text-blue-400 transition">
           Jobs
         </Link>
+
+        <Link to="/applications" className="hover:text-blue-400 transition">
+          Applications
+        </Link>
       </div>
 
       {/* Right side - Username dropdown */}

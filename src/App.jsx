@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import Jobs from "./pages/Jobs";
 import Resumes from "./pages/Resumes";
 import UploadResume from "./pages/UploadResume";
+import Applications from "./pages/Applications";
 import ProtectedRoute from "./components/ProtectedRoute";
 import './App.css'
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/resumes" element={<Resumes />} />
           <Route path="/upload-resume" element={<UploadResume />} />
+          <Route path="/applications" element={<Applications />} />
         </Route>
       </Routes>
     </BrowserRouter>

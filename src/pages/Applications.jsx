@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom";
 
 const Applications = () => {
 
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -113,7 +115,7 @@ const Applications = () => {
 
               </div>
 
-              {/* Cover Letter */}
+              {/* Cover Letter
               {app.cover_letter && (
 
                 <details className="mt-4">
@@ -127,9 +129,9 @@ const Applications = () => {
                   </div>
 
                 </details>
-              )}
+              )} */}
 
-              {/* Tailored Resume */}
+              {/* Tailored Resume
               {app.tailored_resume && (
 
                 <details className="mt-4">
@@ -144,7 +146,7 @@ const Applications = () => {
                   </div>
 
                 </details>
-              )}
+              )} */}
 
               {/* Date */}
               <p className="text-xs text-gray-500 mt-4">
@@ -152,6 +154,14 @@ const Applications = () => {
                 {" "}
                 {new Date(app.created_at).toLocaleString()}
               </p>
+
+              {/* View Details Button */}
+              <button
+                onClick={() => navigate(`/applications/${app.id}`)}
+                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+              >
+                View Application
+              </button>
 
             </div>
           ))}

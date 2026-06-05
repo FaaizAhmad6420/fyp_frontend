@@ -45,7 +45,7 @@ const Login = () => {
           color: "#fff",
           letterSpacing: "-0.3px",
         }}>
-          AI Job Finder
+          Talent Draft
         </div>
 
         <div>
@@ -73,7 +73,7 @@ const Login = () => {
         </div>
 
         <div style={{ color: "rgba(255,255,255,0.25)", fontSize: "12px" }}>
-          © 2026 AI Job Finder
+          © 2026 Talent Draft
         </div>
       </div>
 

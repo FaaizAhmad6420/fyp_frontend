@@ -34,7 +34,7 @@ function Register() {
         flexShrink: 0,
       }} className="auth-panel">
         <div style={{ fontFamily: "var(--font-display)", fontSize: "22px", fontWeight: 700, color: "#fff" }}>
-          AI Job Finder
+          Talent Draft
         </div>
         <div>
           <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "12px" }}>
@@ -47,7 +47,7 @@ function Register() {
             Upload your resume once. Our AI handles tailored applications for every job you want.
           </p>
         </div>
-        <div style={{ color: "rgba(255,255,255,0.25)", fontSize: "12px" }}>© 2026 AI Job Finder</div>
+        <div style={{ color: "rgba(255,255,255,0.25)", fontSize: "12px" }}>© 2026 Talent Draft</div>
       </div>
 
       {/* Right panel */}

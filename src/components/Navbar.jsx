@@ -64,7 +64,7 @@ const Navbar = () => {
           color: "#fff",
           letterSpacing: "-0.3px",
         }}>
-          AI Job Finder
+          Talent Draft
         </span>
       </Link>
 

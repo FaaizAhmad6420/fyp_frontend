@@ -1,104 +1,100 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
 import api from "../api/axios";
 import JobCard from "../components/JobCard";
 import Navbar from "../components/Navbar";
 
 const Jobs = () => {
-
-  const navigate = useNavigate();
-
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
+  useEffect(() => { fetchJobs(); }, []);
 
   const fetchJobs = async () => {
     try {
       const response = await api.get("/jobs/match/");
       setJobs(response.data);
-
     } catch (err) {
       setError("Failed to load job matches");
-
     } finally {
       setLoading(false);
     }
   };
 
   const refreshJobs = async () => {
-
-    setLoading(true);
+    setRefreshing(true);
     setError("");
-
     try {
-
       await api.get("/jobs/fetch/");
-
       await fetchJobs();
-
     } catch (err) {
-
       setError("Failed to refresh jobs");
-
     } finally {
-
-      setLoading(false);
+      setRefreshing(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-
+    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
       <Navbar />
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "36px 24px" }}>
 
-      <div className="max-w-6xl mx-auto p-6">
-
-        <div className="flex justify-between items-center mb-6">
-
-          <h1 className="text-3xl font-bold">
-            Matched Jobs
-          </h1>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "28px" }}>
+          <div>
+            <h1 style={{ fontFamily: "var(--font-display)", fontSize: "26px", fontWeight: 700, letterSpacing: "-0.5px", marginBottom: "4px" }}>
+              Matched Jobs
+            </h1>
+            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
+              {loading ? "Loading..." : `${jobs.length} jobs matched to your profile`}
+            </p>
+          </div>
 
           <button
             onClick={refreshJobs}
-            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+            disabled={refreshing}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "10px 18px",
+              borderRadius: "var(--radius-sm)",
+              border: "1.5px solid var(--border-strong)",
+              background: "var(--bg-card)",
+              fontFamily: "var(--font-body)",
+              fontSize: "13.5px",
+              fontWeight: 500,
+              color: "var(--text-primary)",
+              cursor: refreshing ? "not-allowed" : "pointer",
+              opacity: refreshing ? 0.6 : 1,
+              transition: "var(--transition)",
+            }}
           >
-            Refresh Jobs
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: refreshing ? "rotate(360deg)" : "none", transition: "1s linear" }}>
+              <path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16" />
+            </svg>
+            {refreshing ? "Refreshing..." : "Refresh Jobs"}
           </button>
         </div>
 
-        {loading && (
-          <p className="text-gray-500">
-            Loading job matches...
-          </p>
-        )}
-
         {error && (
-          <p className="text-red-500 font-medium">
+          <div style={{ background: "var(--danger-bg)", border: "1px solid #fecaca", borderRadius: "var(--radius-md)", padding: "12px 16px", marginBottom: "20px", color: "var(--danger)", fontSize: "14px" }}>
             {error}
-          </p>
+          </div>
         )}
 
-        {!loading && jobs.length === 0 && (
-          <p className="text-gray-600">
-            No jobs found.
-          </p>
+        {loading && (
+          <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Loading job matches...</p>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {!loading && jobs.length === 0 && !error && (
+          <div style={{ textAlign: "center", padding: "60px 20px" }}>
+            <p style={{ fontSize: "15px", color: "var(--text-secondary)" }}>No jobs found. Try refreshing to fetch new matches.</p>
+          </div>
+        )}
 
-          {jobs.map((job) => (
-            <JobCard
-              key={job.job_id}
-              job={job}
-            />
-          ))}
-
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" }}>
+          {jobs.map((job) => <JobCard key={job.job_id} job={job} />)}
         </div>
       </div>
     </div>

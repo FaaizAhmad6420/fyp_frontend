@@ -4,167 +4,129 @@ import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 
 const Applications = () => {
-
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-
     const fetchApplications = async () => {
-
       try {
-
-        const response = await api.get(
-          "/applications/history/"
-        );
-
+        const response = await api.get("/applications/history/");
         setApplications(response.data);
-
       } catch (err) {
-
         console.error(err);
-
       } finally {
-
         setLoading(false);
-
       }
     };
-
     fetchApplications();
-
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-
+    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
       <Navbar />
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "36px 24px" }}>
 
-      <div className="max-w-6xl mx-auto p-6">
+        <div style={{ marginBottom: "28px" }}>
+          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "26px", fontWeight: 700, letterSpacing: "-0.5px", marginBottom: "4px" }}>
+            My Applications
+          </h1>
+          <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
+            {loading ? "Loading..." : `${applications.length} application${applications.length !== 1 ? "s" : ""}`}
+          </p>
+        </div>
 
-        <h1 className="text-3xl font-bold mb-6">
-          My Applications
-        </h1>
-
-        {loading && (
-          <p>Loading applications...</p>
-        )}
+        {loading && <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Loading applications...</p>}
 
         {!loading && applications.length === 0 && (
-          <p>No applications found.</p>
+          <div style={{ textAlign: "center", padding: "60px 20px" }}>
+            <p style={{ fontSize: "15px", color: "var(--text-secondary)" }}>No applications yet. Browse jobs to get started.</p>
+          </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" }}>
+          {applications.map((app) => {
+            const score = app.ats_score ?? 0;
+            const scoreColor = score >= 75 ? "var(--success)" : score >= 50 ? "var(--warning)" : "var(--danger)";
+            const barColor = score >= 75 ? "#16a34a" : score >= 50 ? "#d97706" : "#dc2626";
 
-          {applications.map((app) => (
-
-            <div
-              key={app.id}
-              className="bg-white rounded-lg shadow p-5"
-            >
-
-              {/* Job Info */}
-              <h2 className="text-xl font-semibold mb-2">
-                {app.job?.title || "Job"}
-              </h2>
-
-              <p className="text-gray-600">
-                Company: {app.job?.company || "N/A"}
-              </p>
-
-              {/* Status */}
-              <div className="mt-3">
-
-                <span
-                  className={`
-                    px-3 py-1 rounded-full text-sm font-semibold
-
-                    ${
-                      app.status === "submitted"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }
-                  `}
-                >
-                  {app.status}
-                </span>
-              </div>
-
-              {/* ATS Score */}
-              <div className="mt-4">
-
-                <p className="font-medium mb-1">
-                  ATS Score
-                </p>
-
-                <div className="w-full bg-gray-200 rounded-full h-4">
-
-                  <div
-                    className="bg-blue-600 h-4 rounded-full"
-                    style={{
-                      width: `${app.ats_score}%`,
-                    }}
-                  ></div>
-
+            return (
+              <div
+                key={app.id}
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "var(--radius-lg)",
+                  padding: "22px 24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
+                  transition: "var(--transition)",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = "var(--shadow-md)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "var(--border)"; }}
+              >
+                {/* Header */}
+                <div>
+                  <h2 style={{ fontFamily: "var(--font-display)", fontSize: "16px", fontWeight: 600, marginBottom: "4px", letterSpacing: "-0.2px" }}>
+                    {app.job?.title || "Job"}
+                  </h2>
+                  <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+                    {app.job?.company || "N/A"}
+                  </p>
                 </div>
 
-                <p className="text-sm mt-1">
-                  {app.ats_score}%
-                </p>
+                {/* Status + score row */}
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <span style={{
+                    padding: "3px 10px",
+                    borderRadius: "99px",
+                    fontSize: "12px",
+                    fontWeight: 500,
+                    background: app.status === "submitted" ? "var(--success-bg)" : "var(--warning-bg)",
+                    color: app.status === "submitted" ? "var(--success)" : "var(--warning)",
+                  }}>
+                    {app.status}
+                  </span>
+                </div>
 
+                {/* ATS Bar */}
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+                    <span style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: 500 }}>ATS Score</span>
+                    <span style={{ fontSize: "12px", fontWeight: 700, color: scoreColor }}>{score}%</span>
+                  </div>
+                  <div style={{ height: "6px", background: "var(--border)", borderRadius: "99px", overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${score}%`, background: barColor, borderRadius: "99px", transition: "width 0.6s ease" }} />
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+                    {new Date(app.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </span>
+                  <button
+                    onClick={() => navigate(`/applications/${app.id}`)}
+                    style={{
+                      padding: "7px 14px",
+                      borderRadius: "var(--radius-sm)",
+                      border: "none",
+                      background: "var(--navy)",
+                      color: "#fff",
+                      fontFamily: "var(--font-body)",
+                      fontSize: "12.5px",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      transition: "var(--transition)",
+                    }}
+                  >
+                    View →
+                  </button>
+                </div>
               </div>
-
-              {/* Cover Letter
-              {app.cover_letter && (
-
-                <details className="mt-4">
-
-                  <summary className="cursor-pointer font-medium">
-                    View Cover Letter
-                  </summary>
-
-                  <div className="mt-2 whitespace-pre-wrap text-sm text-gray-700">
-                    {app.cover_letter}
-                  </div>
-
-                </details>
-              )} */}
-
-              {/* Tailored Resume
-              {app.tailored_resume && (
-
-                <details className="mt-4">
-
-                  <summary className="cursor-pointer font-medium">
-                    View Tailored Resume
-                  </summary>
-
-                  
-                  <div className="mt-2 whitespace-pre-wrap text-sm text-gray-700">
-                    {app.tailored_resume}
-                  </div>
-
-                </details>
-              )} */}
-
-              {/* Date */}
-              <p className="text-xs text-gray-500 mt-4">
-                Applied on:
-                {" "}
-                {new Date(app.created_at).toLocaleString()}
-              </p>
-
-              {/* View Details Button */}
-              <button
-                onClick={() => navigate(`/applications/${app.id}`)}
-                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-              >
-                View Application
-              </button>
-
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import Navbar from "../components/Navbar";
-import UploadResume from "./UploadResume";
 
 const Resumes = () => {
   const navigate = useNavigate();
@@ -23,181 +22,134 @@ const Resumes = () => {
     }
   };
 
-  useEffect(() => {
-    fetchResumes();
-  }, []);
+  useEffect(() => { fetchResumes(); }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
       <Navbar />
 
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Your Resumes</h1>
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "36px 24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "28px" }}>
+          <div>
+            <h1 style={{ fontFamily: "var(--font-display)", fontSize: "26px", fontWeight: 700, letterSpacing: "-0.5px", marginBottom: "4px" }}>
+              Your Resumes
+            </h1>
+            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
+              {loading ? "Loading..." : `${resumes.length} resume${resumes.length !== 1 ? "s" : ""} uploaded`}
+            </p>
+          </div>
+
           <button
             onClick={() => navigate("/upload-resume")}
-            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+            style={{
+              display: "flex", alignItems: "center", gap: "8px",
+              padding: "10px 18px",
+              borderRadius: "var(--radius-sm)",
+              border: "none",
+              background: "var(--navy)",
+              color: "#fff",
+              fontFamily: "var(--font-body)",
+              fontSize: "13.5px",
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "var(--transition)",
+            }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M12 5v14M5 12h14" />
             </svg>
+            Upload Resume
           </button>
         </div>
 
-        {loading && <p className="text-gray-500">Loading resumes...</p>}
-        {error && <p className="text-red-500 font-medium">{error}</p>}
-
-        {!loading && resumes.length === 0 && (
-          <p className="text-gray-600">No resumes uploaded yet.</p>
+        {error && (
+          <div style={{ background: "var(--danger-bg)", border: "1px solid #fecaca", borderRadius: "var(--radius-md)", padding: "12px 16px", marginBottom: "20px", color: "var(--danger)", fontSize: "14px" }}>
+            {error}
+          </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {loading && <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Loading resumes...</p>}
+
+        {!loading && resumes.length === 0 && (
+          <div style={{ textAlign: "center", padding: "60px 20px" }}>
+            <p style={{ fontSize: "15px", color: "var(--text-secondary)" }}>No resumes uploaded yet.</p>
+          </div>
+        )}
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" }}>
           {resumes.map((resume) => (
-            <div
-              key={resume.id}
-              className="bg-white rounded shadow p-4 flex flex-col gap-2"
-            >
-              <a
-                href={resume.file}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 font-semibold hover:underline"
-              >
-                {resume.file.split("/").pop()}
-              </a>
-              <p className="text-sm text-gray-500">
-                Uploaded: {new Date(resume.created_at).toLocaleString()}
-              </p>
-              {resume.parsed_data ? (
-                <details className="mt-3 text-sm text-gray-700">
-                  <summary className="cursor-pointer font-semibold">
-                    View Parsed Resume Data
-                  </summary>
-
-                  <div className="mt-2 space-y-3 border-b border-gray-300 p-3">
-
-                    {/* Basic Info */}
-                    <div>
-                      <p className="font-medium">Contact</p>
-                      <p>Name: {resume.parsed_data.name || "N/A"}</p>
-                      <p>Email: {resume.parsed_data.email || "N/A"}</p>
-                      <p>Phone: {resume.parsed_data.phone || "N/A"}</p>
-                    </div>
-
-                    {/* Skills */}
-                    {resume.parsed_data.skills?.length > 0 && (
-                      <div>
-                        <p className="font-medium">Skills</p>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                          {resume.parsed_data.skills.map((s, i) => (
-                            <span
-                              key={i}
-                              className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
-                            >
-                              {s}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Education */}
-                    {resume.parsed_data.education?.length > 0 && (
-                      <div>
-                        <p className="font-medium">Education</p>
-                        <ul className="list-disc list-inside">
-                          {resume.parsed_data.education.map((edu, i) => (
-                            <li key={i}>
-                              {edu.name}
-                              {edu.date_start && ` (${edu.date_start}`}
-                              {edu.date_end && ` - ${edu.date_end})`}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Experience */}
-                    {resume.parsed_data.experience?.length > 0 && (
-                      <div>
-                        <p className="font-medium">Experience</p>
-                        <ul className="list-disc list-inside">
-                          {resume.parsed_data.experience.map((exp, i) => (
-                            <li key={i}>
-                              {exp.title} {exp.organization && `- ${exp.organization}`}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                  </div>
-                </details>
-              ) : resume.extracted_text ? (
-                <details className="mt-3 text-sm text-gray-700">
-                  <summary className="cursor-pointer font-semibold">
-                    View Extracted Text
-                  </summary>
-                  <pre className="whitespace-pre-wrap mt-2 bg-gray-100 p-2 rounded">
-                    {resume.extracted_text}
-                  </pre>
-                </details>
-              ) : null}
+            <div key={resume.id} style={{
+              background: "var(--bg-card)",
+              border: "1px solid var(--border)",
+              borderRadius: "var(--radius-lg)",
+              overflow: "hidden",
+            }}>
+              {/* File header */}
+              <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{ width: "36px", height: "36px", background: "var(--accent-light)", borderRadius: "var(--radius-sm)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+                  </svg>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <a href={resume.file} target="_blank" rel="noopener noreferrer" style={{ fontSize: "14px", fontWeight: 600, color: "var(--accent)", textDecoration: "none", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {resume.file.split("/").pop()}
+                  </a>
+                  <p style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: "2px" }}>
+                    {new Date(resume.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </p>
+                </div>
+              </div>
 
               {/* AI Analysis */}
               {resume.ai_analysis && !resume.ai_analysis.error && (
-                <div className="pt-4">
-
-                  <h2 className="text-xl font-bold mb-4 text-blue-700">
-                    AI Resume Analysis
-                  </h2>
+                <div style={{ padding: "20px 24px" }}>
+                  <p style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: "16px" }}>
+                    AI Analysis
+                  </p>
 
                   {/* ATS Score */}
-                  <div className="mb-4">
-                    <p className="font-semibold mb-1">
-                      ATS Score
-                    </p>
-
-                    <div className="w-full bg-gray-200 rounded-full h-4">
-                      <div
-                        className="bg-green-500 h-4 rounded-full"
-                        style={{
-                          width: `${resume.ats_score}%`,
-                        }}
-                      ></div>
+                  <div style={{ marginBottom: "18px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                      <span style={{ fontSize: "13px", fontWeight: 500 }}>ATS Score</span>
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: "15px", fontWeight: 700, color: resume.ats_score >= 75 ? "var(--success)" : resume.ats_score >= 50 ? "var(--warning)" : "var(--danger)" }}>
+                        {resume.ats_score}%
+                      </span>
                     </div>
-
-                    <p className="mt-1 text-sm text-gray-700">
-                      {resume.ats_score}%
-                    </p>
+                    <div style={{ height: "6px", background: "var(--border)", borderRadius: "99px", overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${resume.ats_score}%`, background: resume.ats_score >= 75 ? "#16a34a" : resume.ats_score >= 50 ? "#d97706" : "#dc2626", borderRadius: "99px" }} />
+                    </div>
                   </div>
 
                   {/* Career Domain */}
                   {resume.ai_analysis.career_domain && (
-                    <div className="mb-4">
-                      <p className="font-semibold">
-                        Career Domain
-                      </p>
+                    <div style={{ marginBottom: "14px" }}>
+                      <p style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "4px" }}>Career Domain</p>
+                      <p style={{ fontSize: "13px", fontWeight: 500 }}>{resume.ai_analysis.career_domain}</p>
+                    </div>
+                  )}
 
-                      <p className="text-gray-700">
-                        {resume.ai_analysis.career_domain}
-                      </p>
+                  {/* Skills */}
+                  {resume.parsed_data?.skills?.length > 0 && (
+                    <div style={{ marginBottom: "14px" }}>
+                      <p style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "8px" }}>Skills</p>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                        {resume.parsed_data.skills.map((s, i) => (
+                          <span key={i} style={{ padding: "3px 10px", background: "var(--accent-light)", color: "var(--accent)", borderRadius: "99px", fontSize: "11.5px", fontWeight: 500 }}>
+                            {s}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   )}
 
                   {/* Missing Skills */}
                   {resume.ai_analysis.missing_skills?.length > 0 && (
-                    <div className="mb-4">
-                      <p className="font-semibold mb-2">
-                        Missing Skills
-                      </p>
-
-                      <div className="flex flex-wrap gap-2">
-                        {resume.ai_analysis.missing_skills.map((skill, index) => (
-                          <span
-                            key={index}
-                            className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs"
-                          >
+                    <div style={{ marginBottom: "14px" }}>
+                      <p style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "8px" }}>Missing Skills</p>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                        {resume.ai_analysis.missing_skills.map((skill, i) => (
+                          <span key={i} style={{ padding: "3px 10px", background: "var(--danger-bg)", color: "var(--danger)", borderRadius: "99px", fontSize: "11.5px", fontWeight: 500 }}>
                             {skill}
                           </span>
                         ))}
@@ -207,43 +159,36 @@ const Resumes = () => {
 
                   {/* Strengths */}
                   {resume.ai_analysis.strengths?.length > 0 && (
-                    <div className="mb-4">
-                      <p className="font-semibold mb-2">
-                        Strengths
-                      </p>
-
-                      <ul className="list-disc list-inside text-gray-700 space-y-1">
-                        {resume.ai_analysis.strengths.map((item, index) => (
-                          <li key={index}>
-                            {item}
-                          </li>
+                    <details style={{ marginBottom: "10px" }}>
+                      <summary style={{ fontSize: "12px", color: "var(--text-muted)", cursor: "pointer", fontWeight: 500 }}>
+                        Strengths ({resume.ai_analysis.strengths.length})
+                      </summary>
+                      <ul style={{ marginTop: "8px", paddingLeft: "16px" }}>
+                        {resume.ai_analysis.strengths.map((item, i) => (
+                          <li key={i} style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>{item}</li>
                         ))}
                       </ul>
-                    </div>
+                    </details>
                   )}
 
                   {/* Suggestions */}
                   {resume.ai_analysis.suggestions?.length > 0 && (
-                    <div>
-                      <p className="font-semibold mb-2">
-                        Suggestions
-                      </p>
-
-                      <ul className="list-disc list-inside text-gray-700 space-y-1">
-                        {resume.ai_analysis.suggestions.map((item, index) => (
-                          <li key={index}>
-                            {item}
-                          </li>
+                    <details>
+                      <summary style={{ fontSize: "12px", color: "var(--text-muted)", cursor: "pointer", fontWeight: 500 }}>
+                        Suggestions ({resume.ai_analysis.suggestions.length})
+                      </summary>
+                      <ul style={{ marginTop: "8px", paddingLeft: "16px" }}>
+                        {resume.ai_analysis.suggestions.map((item, i) => (
+                          <li key={i} style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "4px" }}>{item}</li>
                         ))}
                       </ul>
-                    </div>
+                    </details>
                   )}
                 </div>
               )}
 
-              {/* AI Error */}
               {resume.ai_analysis?.error && (
-                <div className="mt-4 bg-red-100 text-red-700 p-3 rounded">
+                <div style={{ margin: "16px 24px", background: "var(--danger-bg)", border: "1px solid #fecaca", borderRadius: "var(--radius-sm)", padding: "10px 14px", color: "var(--danger)", fontSize: "13px" }}>
                   AI Analysis Failed: {resume.ai_analysis.error}
                 </div>
               )}

@@ -119,6 +119,54 @@ const ApplicationDetail = () => {
       ? "bg-yellow-50"
       : "bg-red-50";
 
+  const downloadCoverLetter = async () => {
+    try {
+      const response = await api.get(
+        `/applications/download/cover/${id}/`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "cover_letter.pdf");
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+    } catch (err) {
+      console.error("Download failed:", err);
+    }
+  };
+
+  const downloadResume = async () => {
+    try {
+      const response = await api.get(
+        `/applications/download/resume/${id}/`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "resume.pdf");
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+    } catch (err) {
+      console.error("Download failed:", err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
@@ -177,18 +225,14 @@ const ApplicationDetail = () => {
           >
             ✏️ Edit Application
           </button>
-          <a
-            href={`/applications/download/cover/${id}/`}
-            className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
-          >
+          
+          <button onClick={downloadCoverLetter} className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium">
             ⬇️ Download Cover Letter
-          </a>
-          <a
-            href={`/applications/download/resume/${id}/`}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-          >
+          </button>
+
+          <button onClick={downloadResume} className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
             ⬇️ Download Resume
-          </a>
+          </button>
         </div>
 
         {/* COVER LETTER */}
